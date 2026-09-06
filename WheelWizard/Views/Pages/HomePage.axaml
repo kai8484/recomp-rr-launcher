@@ -164,19 +164,6 @@
                                Click="PlayButton_Click"
                                Margin="0,20,0,0" />
 
-            <!-- Normally we should not change the iconSize and/or Height since default is already correct
-             But because the dolphin icon looks goofy that small, we can increase the size, and then change the size to be the default size again  -->
-            <components:Button x:Name="DolphinButton"
-                               IsEnabled="True"
-                               IconData="{StaticResource DolphinIcon}"
-                               IconSize="30"
-                               Height="40"
-                               Click="DolphinButton_OnClick"
-                               Width="100" Margin="0,6,0,0" />
-            <!-- removed tooltip for dolphin startup button as this doesn't look so nice, and I think everyone knows it by the dolphin icon -->
-            <!-- ToolTip.Tip="{loc:T action.launch_dolphin}"
-                               ToolTip.Placement="Top"
-                               ToolTip.ShowDelay="50"  -->
         </StackPanel>
         
         <components:WheelTrail Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" x:Name="HomeTrail4"

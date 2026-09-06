@@ -38,8 +38,7 @@ public class SettingsManager : ISettingsManager
 
         #region WhWz settings
         // Register this first because the path validators use the active frontend mode when deciding
-        // whether Dolphin-only locations may be left blank.
-        ENABLE_RECOMP = RegisterWhWz("EnableRecomp", false);
+        ENABLE_RECOMP = RegisterWhWz("EnableRecomp", true);
         // Whether WiiCompiled directly shares Dolphin's live NAND. Disabled means private mode;
         // private mode uses the imported clone below when one exists, otherwise the runtime default.
         RECOMP_USE_DOLPHIN_DATA = RegisterWhWz("RecompUseDolphinData", false);
@@ -283,7 +282,7 @@ public class SettingsManager : ISettingsManager
 
     private OperationResult<SettingsValidationReport> ValidateDolphinPathSettings() => ValidatePathSettings(requireDolphin: true);
 
-    public bool IsRecompModeActive() => OperatingSystem.IsWindows() && Get<bool>(ENABLE_RECOMP);
+    public bool IsRecompModeActive() => Get<bool>(ENABLE_RECOMP);
 
     private OperationResult<SettingsValidationReport> ValidatePathSettings(bool requireDolphin)
     {

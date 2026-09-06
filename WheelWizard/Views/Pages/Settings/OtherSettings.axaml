@@ -149,7 +149,8 @@
                     <CheckBox Grid.Column="1"
                               x:Name="EnableRecomp"
                               Classes="SwitchDark"
-                              IsChecked="False"
+                              IsChecked="True"
+                              IsEnabled="False"
                               HorizontalAlignment="Right"
                               VerticalAlignment="Center" />
                 </Grid>

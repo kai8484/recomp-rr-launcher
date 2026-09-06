@@ -13,10 +13,7 @@ public interface ILauncherProvider
     ILauncher GetActiveLauncher();
 }
 
-public class LauncherProvider(ISettingsManager settings, IServiceProvider serviceProvider) : ILauncherProvider
+public class LauncherProvider(IServiceProvider serviceProvider) : ILauncherProvider
 {
-    public ILauncher GetActiveLauncher() =>
-        settings.IsRecompModeActive()
-            ? serviceProvider.GetRequiredService<RecompLauncher>()
-            : serviceProvider.GetRequiredService<RrLauncher>();
+    public ILauncher GetActiveLauncher() => serviceProvider.GetRequiredService<RecompLauncher>();
 }

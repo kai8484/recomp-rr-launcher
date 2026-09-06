@@ -714,11 +714,33 @@ public static class PathManager
     {
         get
         {
-            if (Settings.NAND_ROOT_PATH.IsValid())
+            if (Settings.NAND_ROOT_PATH.IsValid() && !string.IsNullOrWhiteSpace(Settings.Get<string>(Settings.NAND_ROOT_PATH)))
             {
                 return Settings.Get<string>(Settings.NAND_ROOT_PATH);
             }
-            return Path.Combine(UserFolderPath, "Wii");
+
+            var recompNand = Settings.Get<string>(Settings.RECOMP_NAND_ROOT);
+            if (!string.IsNullOrWhiteSpace(recompNand) && Directory.Exists(recompNand))
+            {
+                return recompNand;
+            }
+
+            if (Directory.Exists(RecompNandCopyFolderPath))
+            {
+                return RecompNandCopyFolderPath;
+            }
+
+            if (Directory.Exists(RecompPrivateNandFolderPath))
+            {
+                return RecompPrivateNandFolderPath;
+            }
+
+            if (!string.IsNullOrWhiteSpace(UserFolderPath))
+            {
+                return Path.Combine(UserFolderPath, "Wii");
+            }
+
+            return RecompPrivateNandFolderPath;
         }
     }
 

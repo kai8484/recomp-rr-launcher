@@ -19,16 +19,8 @@
         <ApplicationIcon>car-wheel.ico</ApplicationIcon>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+    <PropertyGroup>
         <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64' or '$(RuntimeIdentifier)' == 'linux-arm64'">
-        <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'osx-arm64' or '$(RuntimeIdentifier)' == 'osx-x64'">
-        <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -57,7 +49,6 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
         <PackageReference Include="Serilog.Sinks.File" Version="6.0.0"/>
         <PackageReference Include="SharpCompress" Version="0.48.1"/>
-        <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3"/>
         <PackageReference Include="TestableIO.System.IO.Abstractions.Analyzers" Version="2022.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

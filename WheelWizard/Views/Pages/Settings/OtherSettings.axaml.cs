@@ -20,11 +20,9 @@ public partial class OtherSettings : UserControlBase
     public OtherSettings()
     {
         InitializeComponent();
-        _settingsAreDisabled = !SettingsService.DolphinPathsSetupCorrectly();
+        _settingsAreDisabled = !SettingsService.PathsSetupCorrectly();
         DisabledWarningText.IsVisible = _settingsAreDisabled;
 
-        // Recomp can be enabled with only a game image configured. Disable the Dolphin-only
-        // controls individually so the recomp switch never becomes trapped behind Dolphin setup.
         LaunchRrOnStartup.IsEnabled = !_settingsAreDisabled;
         DolphinReinstallButton.IsEnabled = !_settingsAreDisabled;
         OpenGameFolderButton.IsEnabled = !_settingsAreDisabled && Directory.Exists(PathManager.RiivolutionWhWzFolderPath);

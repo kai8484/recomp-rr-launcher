@@ -86,54 +86,18 @@ public partial class HomePage : UserControlBase
     {
         InitializeComponent();
 
-        // The trails double as the animation lock, so they have to exist before anything that can
-        // reach an animation runs. UpdatePage() ends in a status read that is allowed to complete
-        // synchronously (a launcher that already knows it is Ready never yields), and a synchronous
-        // Ready draws the button and starts the entrance animation inside this constructor.
         _trails = [HomeTrail1, HomeTrail2, HomeTrail3, HomeTrail4, HomeTrail5];
         RandomSystem.Random.Shared.Shuffle(_trails);
 
         _launcherTypes.Add(LauncherProvider.GetActiveLauncher());
-        if (SettingsService.IsRecompModeActive())
-            DolphinButton.IsVisible = false;
-        else
-            ApplyDolphinTrailColors();
         PopulateGameModeDropdown();
         UpdatePage();
-    }
-
-    /// <summary>
-    /// The wheel trails tell you what Play will start: blue for a Dolphin session, and the default
-    /// primary color for WiiCompiled. The XAML defaults are the WiiCompiled palette, so only the
-    /// Dolphin frontend recolors anything.
-    /// </summary>
-    private void ApplyDolphinTrailColors()
-    {
-        RecolorTrail(HomeTrail1, "Blue400", "Blue700");
-        RecolorTrail(HomeTrail2, "Blue600", "Blue800");
-        RecolorTrail(HomeTrail3, "Blue200", "Blue600");
-        RecolorTrail(HomeTrail4, "Blue400", "Blue700");
-        RecolorTrail(HomeTrail5, "Blue600", "Blue800");
-    }
-
-    private void RecolorTrail(WheelTrail trail, string backgroundKey, string foregroundKey)
-    {
-        if (this.FindResource(backgroundKey) is Color background)
-            trail.Background = new SolidColorBrush(background);
-        if (this.FindResource(foregroundKey) is Color foreground)
-            trail.Foreground = new SolidColorBrush(foreground);
     }
 
     private void UpdatePage()
     {
         GameTitle.Text = CurrentLauncher.GameTitle == "Retro Rewind" && IsAprilFirst ? "Retro Beefbai" : CurrentLauncher.GameTitle;
         UpdateActionButton();
-    }
-
-    private async void DolphinButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        await DolphinLaunchHelper.LaunchDolphin();
-        DisableAllButtonsTemporarily();
     }
 
     private async void LaunchGame()
@@ -252,7 +216,6 @@ public partial class HomePage : UserControlBase
         PlayButton.IsEnabled = state.OnClick != null;
         if (Application.Current != null && Application.Current.FindResource(state.IconName) is Geometry geometry)
             PlayButton.IconData = geometry;
-        DolphinButton.IsEnabled = state.SubButtonsEnabled && SettingsService.PathsSetupCorrectly();
 
         if (_status == WheelWizardStatus.Ready)
             PlayEntranceAnimation();

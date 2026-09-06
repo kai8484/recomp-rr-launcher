@@ -46,25 +46,9 @@ public partial class SettingsPage : UserControlBase
             UpdateTabVisibility();
     }
 
-    /// <summary>
-    /// In recomp mode the WiiCompiled tab is the video/data settings surface and Dolphin's Video tab
-    /// is hidden: those settings only affect Dolphin and would silently do nothing for the recomp.
-    /// </summary>
     private void UpdateTabVisibility()
     {
-        var recompMode = SettingsService.IsRecompModeActive();
-        RecompSettingsTab.IsVisible = recompMode;
-        VideoSettingsTab.IsVisible = !recompMode;
-
-        // Never leave the content on a tab that just disappeared.
-        var hiddenSelected =
-            (recompMode && SettingsContent.Content is VideoSettings) || (!recompMode && SettingsContent.Content is RecompSettings);
-        if (!hiddenSelected)
-            return;
-
-        var fallback = new WhWzSettings();
-        SettingsContent.Content = fallback;
-        SetCheckedTopBarButton(fallback);
+        RecompSettingsTab.IsVisible = true;
     }
 
     private void TopBarRadio_OnClick(object? sender, RoutedEventArgs e)

@@ -74,6 +74,7 @@ public class SettingsManagerTests
     public void ValidateCorePathSettings_ReturnsAllExpectedIssues_WhenDefaultsAreInvalid()
     {
         var manager = CreateManager(new RealFileSystem(), out _, out _, out _);
+        manager.Set(manager.ENABLE_RECOMP, false);
 #pragma warning disable CS0618
         SettingsRuntime.Initialize(manager);
 #pragma warning restore CS0618
