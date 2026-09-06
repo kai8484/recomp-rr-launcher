@@ -491,4 +491,5 @@ $RECYCLE.BIN/
 AGENTS.md
 /.dotnet
 \!exe/
+\!launcher/
 \!app/
