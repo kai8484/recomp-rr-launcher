@@ -25,7 +25,10 @@ public static class PathManager
 
     // Launcher always runs in portable mode
     public static bool IsPortableWhWz => true;
-    private static readonly string DefaultWheelWizardAppdataPath = FileHelper.NormalizePath(AppDomain.CurrentDomain.BaseDirectory);
+    private static readonly string DefaultWheelWizardAppdataPath = FileHelper.NormalizePath(
+        (!string.IsNullOrWhiteSpace(Environment.ProcessPath) ? Path.GetDirectoryName(Environment.ProcessPath) : null)
+            ?? AppDomain.CurrentDomain.BaseDirectory
+    );
     private static string? _wheelWizardAppdataOverride;
 
     static PathManager()
