@@ -47,17 +47,11 @@ public partial class VideoSettings : UserControlBase
         ShowFPSButton.IsCheckedChanged += ShowFPS_OnClick;
         RendererDropdown.SelectionChanged += RendererDropdown_OnSelectionChanged;
         DisableForce.IsCheckedChanged += ClickForceWiimote;
-        LaunchWithDolphin.IsCheckedChanged += ClickLaunchWithDolphinWindow;
     }
 
     private void ClickForceWiimote(object? sender, RoutedEventArgs e)
     {
         SettingsService.Set(SettingsService.FORCE_WIIMOTE, DisableForce.IsChecked == true);
-    }
-
-    private void ClickLaunchWithDolphinWindow(object? sender, RoutedEventArgs e)
-    {
-        SettingsService.Set(SettingsService.LAUNCH_WITH_DOLPHIN, LaunchWithDolphin.IsChecked == true);
     }
 
     private void LoadSettings()
@@ -67,7 +61,6 @@ public partial class VideoSettings : UserControlBase
         RecommendedButton.IsChecked = SettingsService.Get<bool>(SettingsService.RECOMMENDED_SETTINGS);
         ShowFPSButton.IsChecked = SettingsService.Get<bool>(SettingsService.SHOW_FPS);
         DisableForce.IsChecked = SettingsService.Get<bool>(SettingsService.FORCE_WIIMOTE);
-        LaunchWithDolphin.IsChecked = SettingsService.Get<bool>(SettingsService.LAUNCH_WITH_DOLPHIN);
 
         var resolution = SettingsService.Get<int>(SettingsService.INTERNAL_RESOLUTION);
         ResolutionDropdown.SelectedIndex = resolution is >= 1 and <= 8 ? resolution - 1 : -1;

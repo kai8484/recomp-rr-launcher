@@ -23,57 +23,7 @@
                 </StackPanel>
     
                 <StackPanel Spacing="4" Margin="0,0,0,7">
-                    <Border Classes="SettingsBlockStyle SettingsRowStyle SettingsRowTop"
-                            x:Name="DolphinExecutableField"
-                            ClipToBounds="True">
-                        <Grid ColumnDefinitions="Auto,*,Auto,Auto" MinHeight="40">
-                            <PathIcon Grid.Column="0"
-                                      x:Name="DolphinExecutableCompleteIcon"
-                                      Data="{StaticResource SuccessTip}"
-                                      Foreground="{StaticResource Primary300}"
-                                      Width="18" Height="18"
-                                      Margin="0,0,10,0"
-                                      VerticalAlignment="Center"
-                                      IsVisible="False" />
-                            <PathIcon Grid.Column="0"
-                                      x:Name="DolphinExecutableWarningIcon"
-                                      Data="{StaticResource WarningTip}"
-                                      Foreground="{StaticResource Warning400}"
-                                      Width="18" Height="18"
-                                      Margin="0,0,10,0"
-                                      VerticalAlignment="Center"
-                                      IsVisible="False" />
-                            <StackPanel Grid.Column="1" Margin="0,0,16,0" Spacing="3" VerticalAlignment="Center">
-                                <components1:FormFieldLabel Text="{loc:T option.dolphin_emulator_exe}" />
-                                <SelectableTextBlock x:Name="DolphinExecutableValueText"
-                                                     Classes="TinyText"
-                                                     Text="{loc:T helper_text.end_with_exe}"
-                                                     TextWrapping="Wrap" />
-                            </StackPanel>
-                            <components1:Button Grid.Column="2"
-                                                x:Name="DolphinExecutableChangeButton"
-                                                Variant="Default"
-                                                ButtonSize="Compact"
-                                                Text="{loc:T action.change}"
-                                                IconData="{StaticResource Pen}"
-                                                VerticalAlignment="Center"
-                                                Click="DolphinExeBrowse_OnClick" />
-                            <components1:Button Grid.Column="3"
-                                                x:Name="DolphinExecutableOpenButton"
-                                                Variant="Default"
-                                                ButtonSize="Compact"
-                                                Text=""
-                                                IconData="{StaticResource Folder}"
-                                                ToolTip.Tip="{loc:T action.open}"
-                                                ToolTip.Placement="Top"
-                                                ToolTip.ShowDelay="50"
-                                                Margin="6,0,0,0"
-                                                VerticalAlignment="Center"
-                                                Click="DolphinExecutableOpen_OnClick" />
-                        </Grid>
-                    </Border>
-
-                    <Border Classes="SettingsBlockStyle SettingsRowStyle SettingsRowMiddle"
+                    <Border Classes="SettingsBlockStyle SettingsRowStyle SettingsRowSingle"
                             x:Name="GameLocationBorder"
                             ClipToBounds="True">
                         <Grid ColumnDefinitions="Auto,*,Auto,Auto" MinHeight="40">
@@ -119,53 +69,6 @@
                                                 Margin="6,0,0,0"
                                                 VerticalAlignment="Center"
                                                 Click="GameLocationOpen_OnClick" />
-                        </Grid>
-                    </Border>
-
-                    <Border Classes="SettingsBlockStyle SettingsRowStyle SettingsRowBottom"
-                            x:Name="DolphinUserFolderBorder"
-                            ClipToBounds="True">
-                        <Grid ColumnDefinitions="Auto,*,Auto,Auto" MinHeight="40">
-                            <PathIcon Grid.Column="0"
-                                      x:Name="DolphinUserFolderCompleteIcon"
-                                      Data="{StaticResource SuccessTip}"
-                                      Foreground="{StaticResource Primary300}"
-                                      Width="18" Height="18"
-                                      Margin="0,0,10,0"
-                                      VerticalAlignment="Center"
-                                      IsVisible="False" />
-                            <PathIcon Grid.Column="0"
-                                      x:Name="DolphinUserFolderWarningIcon"
-                                      Data="{StaticResource WarningTip}"
-                                      Foreground="{StaticResource Warning400}"
-                                      Width="18" Height="18"
-                                      Margin="0,0,10,0"
-                                      VerticalAlignment="Center"
-                                      IsVisible="False" />
-                            <StackPanel Grid.Column="1" Margin="0,0,16,0" Spacing="3" VerticalAlignment="Center">
-                                <components1:FormFieldLabel x:Name="DolphinUserFolderLabel"
-                                                            Text="{loc:T option.dolphin_user_path}" />
-                            </StackPanel>
-                            <components1:Button Grid.Column="2"
-                                                x:Name="DolphinUserFolderChangeButton"
-                                                Variant="Default"
-                                                ButtonSize="Compact"
-                                                Text="{loc:T action.change}"
-                                                IconData="{StaticResource Pen}"
-                                                VerticalAlignment="Center"
-                                                Click="DolphinUserPathBrowse_OnClick" />
-                            <components1:Button Grid.Column="3"
-                                                x:Name="DolphinUserFolderOpenButton"
-                                                Variant="Default"
-                                                ButtonSize="Compact"
-                                                Text=""
-                                                IconData="{StaticResource Folder}"
-                                                ToolTip.Tip="{loc:T action.open}"
-                                                ToolTip.Placement="Top"
-                                                ToolTip.ShowDelay="50"
-                                                Margin="6,0,0,0"
-                                                VerticalAlignment="Center"
-                                                Click="DolphinUserFolderOpen_OnClick" />
                         </Grid>
                     </Border>
                 </StackPanel>

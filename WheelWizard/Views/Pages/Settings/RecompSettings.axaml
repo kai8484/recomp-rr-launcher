@@ -128,67 +128,6 @@
                                     Spacing="3"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <components:FormFieldLabel Text="{loc:T option.recomp_share_dolphin_data}" />
-                                <PathIcon x:Name="SharedNandWarningIcon"
-                                          IsVisible="False"
-                                          Data="{StaticResource WarningTriangle}"
-                                          Foreground="{StaticResource Warning600}"
-                                          ToolTip.Tip="{loc:T helper_text.recomp_shared_nand_warning}"
-                                          ToolTip.Placement="Top"
-                                          ToolTip.ShowDelay="50"
-                                          Width="14"
-                                          Height="14" />
-                            </StackPanel>
-                            <SelectableTextBlock Classes="TinyText"
-                                                 Text="{loc:T helper_text.recomp_share_dolphin_data}"
-                                                 TextAlignment="Left"
-                                                 TextWrapping="Wrap" />
-                        </StackPanel>
-                        <CheckBox Grid.Column="1"
-                                  x:Name="ShareDolphinData"
-                                  Classes="SwitchDark"
-                                  HorizontalAlignment="Right"
-                                  VerticalAlignment="Center" />
-                    </Grid>
-                </Border>
-
-                <Border Classes="SettingsBlockStyle SettingsRowStyle SettingsRowMiddle">
-                    <Grid ColumnDefinitions="*,Auto" MinHeight="40">
-                        <StackPanel Grid.Column="0"
-                                    Margin="0,0,16,0"
-                                    Spacing="3"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center">
-                            <components:FormFieldLabel Text="{loc:T option.recomp_clone_dolphin_data}" />
-                            <SelectableTextBlock Classes="TinyText"
-                                                 Text="{loc:T helper_text.recomp_clone_dolphin_data}"
-                                                 TextAlignment="Left"
-                                                 TextWrapping="Wrap" />
-                            <SelectableTextBlock x:Name="DolphinCloneStatus"
-                                                 Classes="TinyText"
-                                                 TextAlignment="Left"
-                                                 TextWrapping="Wrap" />
-                        </StackPanel>
-                        <components:Button Grid.Column="1"
-                                           x:Name="CloneDolphinDataButton"
-                                           Variant="Default"
-                                           ButtonSize="Compact"
-                                           Text="{loc:T action.clone}"
-                                           IconData="{StaticResource Duplicate}"
-                                           HorizontalAlignment="Right"
-                                           VerticalAlignment="Center"
-                                           Click="CloneDolphinData_OnClick" />
-                    </Grid>
-                </Border>
-
-                <Border Classes="SettingsBlockStyle SettingsRowStyle SettingsRowMiddle">
-                    <Grid ColumnDefinitions="*,Auto" MinHeight="40">
-                        <StackPanel Grid.Column="0"
-                                    Margin="0,0,16,0"
-                                    Spacing="3"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center">
                             <components:FormFieldLabel Text="{loc:T option.installation_folder}" />
                             <SelectableTextBlock x:Name="InstallLocationText"
                                        Classes="TinyText"

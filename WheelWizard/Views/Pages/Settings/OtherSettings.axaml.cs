@@ -24,7 +24,7 @@ public partial class OtherSettings : UserControlBase
         DisabledWarningText.IsVisible = _settingsAreDisabled;
 
         LaunchRrOnStartup.IsEnabled = !_settingsAreDisabled;
-        DolphinReinstallButton.IsEnabled = !_settingsAreDisabled;
+        RetroRewindReinstallButton.IsEnabled = !_settingsAreDisabled;
         OpenGameFolderButton.IsEnabled = !_settingsAreDisabled && Directory.Exists(PathManager.RiivolutionWhWzFolderPath);
         OpenSaveFolderButton.IsEnabled = !_settingsAreDisabled;
         if (!_settingsAreDisabled)

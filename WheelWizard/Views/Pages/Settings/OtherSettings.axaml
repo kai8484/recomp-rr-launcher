@@ -7,7 +7,7 @@
              xmlns:components1="clr-namespace:WheelWizard.Views.Components"
              x:Class="WheelWizard.Views.Pages.Settings.OtherSettings">
 
-    <Grid x:Name="DolphinBorder">
+    <Grid x:Name="OtherSettingsBorder">
         <StackPanel Margin="0,15,0,0">
 
             <Grid Margin="0,-10,0,10" MinHeight="40" x:Name="DisabledWarningText">
@@ -71,7 +71,7 @@
                                        TextWrapping="Wrap" />
                         </StackPanel>
                         <components1:Button Grid.Column="1"
-                                            x:Name="DolphinReinstallButton"
+                                            x:Name="RetroRewindReinstallButton"
                                             Variant="Warning"
                                             ButtonSize="Compact"
                                             IsEnabled="True"

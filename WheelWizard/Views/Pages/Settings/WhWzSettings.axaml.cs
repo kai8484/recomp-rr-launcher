@@ -33,9 +33,6 @@ public partial class WhWzSettings : UserControlBase
     [Inject]
     private ISettingsLocalizationService LocalizationService { get; set; } = null!;
 
-    [Inject]
-    private IDolphinSettingManager DolphinSettingsService { get; set; } = null!;
-
     public WhWzSettings()
     {
         InitializeComponent();
@@ -50,13 +47,8 @@ public partial class WhWzSettings : UserControlBase
 
     private void ConfigureLocationFieldsForActiveFrontend()
     {
-        var recompEnabled = SettingsService.IsRecompModeActive();
-        DolphinExecutableField.IsVisible = !recompEnabled;
-        GameLocationBorder.CornerRadius = recompEnabled ? new Avalonia.CornerRadius(12, 12, 5, 5) : new Avalonia.CornerRadius(5);
-        DolphinUserFolderLabel.Text = recompEnabled
-            ? $"{t("option.dolphin_user_path")} ({t("helper_text.optional")})"
-            : t("option.dolphin_user_path");
-        ToolTip.SetTip(LocationWarningIcon, recompEnabled ? t("helper_text.must_set_game_path") : t("helper_text.must_set_paths"));
+        GameLocationBorder.CornerRadius = new Avalonia.CornerRadius(12);
+        ToolTip.SetTip(LocationWarningIcon, t("helper_text.must_set_game_path"));
     }
 
     private void LoadSettings()
@@ -124,118 +116,6 @@ public partial class WhWzSettings : UserControlBase
         return t("state.custom") + ": " + percentageString;
     }
 
-    private async void DolphinExeBrowse_OnClick(object sender, RoutedEventArgs e)
-    {
-        var executableFileType = new FilePickerFileType("Executable files")
-        {
-            Patterns = Environment.OSVersion.Platform switch
-            {
-                PlatformID.Win32NT => new[] { "*.exe" },
-                PlatformID.Unix => new[] { "*", "*.sh" },
-                PlatformID.MacOSX => new[] { "*", "*.app" },
-                _ => new[] { "*" }, // Fallback
-            },
-        };
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            const string selectFile = "Select executable file";
-            const string enterCommand = "Enter launch command";
-            var choice = await new OptionsWindow()
-                .SetWindowTitle("Change Dolphin executable")
-                .AddOption("FileImport", selectFile, () => { })
-                .AddOption("Code", enterCommand, () => { })
-                .AwaitAnswer();
-
-            if (choice == enterCommand)
-            {
-                await EnterLinuxDolphinCommandAsync();
-                return;
-            }
-
-            if (choice != selectFile)
-                return;
-        }
-
-        if (EnvHelper.IsFlatpakSandboxed())
-        {
-            // Having a picker does not make sense if Wheel Wizard is sandboxed.
-            return;
-        }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            var dolphinAppPath = PathManager.TryToFindApplicationPath();
-            if (!string.IsNullOrEmpty(dolphinAppPath))
-            {
-                var result = await new YesNoWindow()
-                    .SetMainText(t("question.dolphin_found.title"))
-                    .SetExtraText($"{t("question.dolphin_found.extra")}\n{dolphinAppPath}")
-                    .AwaitAnswer();
-
-                if (result)
-                {
-                    await ApplyLocationSettingAsync(SettingsService.DOLPHIN_LOCATION, EnvHelper.SingleQuotePath(dolphinAppPath));
-                    return;
-                }
-            }
-            else
-            {
-                await MessageTranslationHelper.AwaitMessageAsync(MessageTranslation.Warning_DolphinNotFound);
-            }
-
-            // Fallback to manual selection
-            var folders = await FilePickerHelper.SelectFolderAsync("Select Dolphin.app");
-            if (folders != null && folders.Count >= 1)
-            {
-                var resolvedFolder = await ResolveSelectedFolderPathAsync(folders[0]);
-                if (string.IsNullOrWhiteSpace(resolvedFolder))
-                    return;
-
-                var executablePath = Path.Combine(resolvedFolder, "Contents", "MacOS", "Dolphin");
-                await ApplyLocationSettingAsync(SettingsService.DOLPHIN_LOCATION, EnvHelper.SingleQuotePath(executablePath));
-            }
-
-            return; // do not do normal selection for MacOS
-        }
-
-        var filePath = await FilePickerHelper.OpenSingleFileAsync("Select Dolphin Emulator", [executableFileType]);
-        if (!string.IsNullOrEmpty(filePath))
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                if (string.Equals(Path.GetFileName(filePath), "DolphinTool.exe", StringComparison.OrdinalIgnoreCase))
-                {
-                    await MessageTranslationHelper.AwaitMessageAsync(MessageTranslation.Warning_DolphinToolSelected);
-                    return;
-                }
-
-                // On Windows, the file path is directly used as the executable, not in some command
-                await ApplyLocationSettingAsync(SettingsService.DOLPHIN_LOCATION, filePath);
-            }
-            else
-            {
-                await ApplyLocationSettingAsync(SettingsService.DOLPHIN_LOCATION, EnvHelper.SingleQuotePath(filePath));
-            }
-        }
-    }
-
-    private async Task EnterLinuxDolphinCommandAsync()
-    {
-        var currentValue = PathManager.DolphinFilePath;
-        var command = await new TextInputWindow()
-            .SetMainText("Enter Dolphin launch command")
-            .SetExtraText("Enter the terminal command Wheel Wizard should use to launch Dolphin.")
-            .SetPlaceholderText("Example: flatpak run org.DolphinEmu.dolphin-emu")
-            .SetInitialText(IsConfiguredExecutableFile(currentValue) ? string.Empty : currentValue)
-            .SetButtonText(t("action.cancel"), t("action.save"))
-            .SetValidation((_, value) => string.IsNullOrWhiteSpace(value) ? Fail("Enter a launch command.") : Ok())
-            .ShowDialog();
-
-        if (command != null)
-            await ApplyLocationSettingAsync(SettingsService.DOLPHIN_LOCATION, command.Trim());
-    }
-
     private async void GameLocationBrowse_OnClick(object sender, RoutedEventArgs e)
     {
         var fileType = new FilePickerFileType("Game files")
@@ -250,66 +130,9 @@ public partial class WhWzSettings : UserControlBase
         }
     }
 
-    private async void DolphinUserPathBrowse_OnClick(object sender, RoutedEventArgs e)
-    {
-        var currentDolphinPath = PathManager.DolphinFilePath;
-        var folderPath = string.IsNullOrWhiteSpace(currentDolphinPath)
-            ? PathManager.TryFindUserFolderPath()
-            : PathManager.TryFindUserFolderPath(currentDolphinPath);
-
-        if (!string.IsNullOrEmpty(folderPath))
-        {
-            // Ask the user if they want to use the automatically found folder
-            var result = await new YesNoWindow()
-                .SetMainText(t("question.dolphin_found.title"))
-                .SetExtraText($"{t("question.dolphin_found.extra")}\n{folderPath}")
-                .AwaitAnswer();
-
-            if (result)
-            {
-                await ApplyLocationSettingAsync(SettingsService.USER_FOLDER_PATH, folderPath);
-                return;
-            }
-        }
-        else
-        {
-            await MessageTranslationHelper.AwaitMessageAsync(MessageTranslation.Warning_DolphinNotFound);
-        }
-
-        var currentFolder = (string)SettingsService.USER_FOLDER_PATH.Get();
-        var topLevel = TopLevel.GetTopLevel(this);
-        // If a current folder exists and is valid, suggest it as the starting location
-        if (!string.IsNullOrEmpty(currentFolder) && Directory.Exists(currentFolder))
-        {
-            var folder = await topLevel!.StorageProvider.TryGetFolderFromPathAsync(currentFolder);
-            var folders = await FilePickerHelper.SelectFolderAsync("Select Dolphin User Path", folder);
-
-            if (folders != null && folders.Count >= 1)
-            {
-                var resolvedFolder = await ResolveSelectedFolderPathAsync(folders[0]);
-                if (!string.IsNullOrWhiteSpace(resolvedFolder))
-                    await ApplyLocationSettingAsync(SettingsService.USER_FOLDER_PATH, resolvedFolder);
-            }
-            return;
-        }
-        else
-        {
-            // Let the user manually select a folder
-            var manualFolders = await FilePickerHelper.SelectFolderAsync("Select Dolphin User Path");
-
-            if (manualFolders != null && manualFolders.Count >= 1)
-            {
-                var resolvedFolder = await ResolveSelectedFolderPathAsync(manualFolders[0]);
-                if (!string.IsNullOrWhiteSpace(resolvedFolder))
-                    await ApplyLocationSettingAsync(SettingsService.USER_FOLDER_PATH, resolvedFolder);
-            }
-        }
-    }
-
     private async Task<bool> ApplyLocationSettingAsync(Setting setting, string path)
     {
-        var normalizedPath =
-            setting == SettingsService.USER_FOLDER_PATH ? path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) : path;
+        var normalizedPath = path;
         var previousPath = (string)setting.Get();
 
         if (!setting.Set(normalizedPath))
@@ -320,22 +143,11 @@ public partial class WhWzSettings : UserControlBase
         }
 
         UpdateLocationRows();
-        if (!string.Equals(previousPath, normalizedPath, StringComparison.Ordinal) && SettingsService.PathsSetupCorrectly())
-            DolphinSettingsService.ReloadSettings();
-
         await MessageTranslationHelper.AwaitMessageAsync(MessageTranslation.Success_PathSettingsSaved);
         return true;
     }
 
-    private void DolphinExecutableOpen_OnClick(object sender, RoutedEventArgs e) => OpenContainingFolder(PathManager.DolphinFilePath);
-
     private void GameLocationOpen_OnClick(object sender, RoutedEventArgs e) => OpenContainingFolder(PathManager.GameFilePath);
-
-    private void DolphinUserFolderOpen_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (Directory.Exists(PathManager.UserFolderPath))
-            FilePickerHelper.OpenFolderInFileManager(PathManager.UserFolderPath);
-    }
 
     private static void OpenContainingFolder(string filePath)
     {
@@ -346,10 +158,7 @@ public partial class WhWzSettings : UserControlBase
             if (!string.IsNullOrWhiteSpace(folderPath) && Directory.Exists(folderPath))
                 FilePickerHelper.OpenFolderInFileManager(folderPath);
         }
-        catch
-        {
-            // Commands such as Flatpak launch strings do not have a folder to open.
-        }
+        catch { }
     }
 
     private void AppDataLocationOpen_OnClick(object sender, RoutedEventArgs e)
@@ -363,33 +172,14 @@ public partial class WhWzSettings : UserControlBase
     private void UpdateLocationRows()
     {
         SetLocationRowState(
-            DolphinExecutableCompleteIcon,
-            DolphinExecutableWarningIcon,
-            DolphinExecutableChangeButton,
-            SettingsService.DOLPHIN_LOCATION.IsValid() && !string.IsNullOrWhiteSpace(PathManager.DolphinFilePath)
-        );
-        SetLocationRowState(
             GameLocationCompleteIcon,
             GameLocationWarningIcon,
             GameLocationChangeButton,
             SettingsService.GAME_LOCATION.IsValid() && !string.IsNullOrWhiteSpace(PathManager.GameFilePath)
         );
-        SetLocationRowState(
-            DolphinUserFolderCompleteIcon,
-            DolphinUserFolderWarningIcon,
-            DolphinUserFolderChangeButton,
-            SettingsService.USER_FOLDER_PATH.IsValid()
-        );
 
         LocationWarningIcon.IsVisible = !SettingsService.PathsSetupCorrectly();
-        DolphinExecutableValueText.Text = string.IsNullOrWhiteSpace(PathManager.DolphinFilePath)
-            ? t("helper_text.end_with_exe")
-            : PathManager.DolphinFilePath;
-        DolphinExecutableOpenButton.IsVisible = !OperatingSystem.IsLinux() || IsConfiguredExecutableFile(PathManager.DolphinFilePath);
-        DolphinExecutableOpenButton.IsEnabled =
-            DolphinExecutableOpenButton.IsVisible && CanOpenContainingFolder(PathManager.DolphinFilePath);
         GameLocationOpenButton.IsEnabled = CanOpenContainingFolder(PathManager.GameFilePath);
-        DolphinUserFolderOpenButton.IsEnabled = Directory.Exists(PathManager.UserFolderPath);
     }
 
     private static void SetLocationRowState(PathIcon completeIcon, PathIcon warningIcon, SettingsButton changeButton, bool isValid)

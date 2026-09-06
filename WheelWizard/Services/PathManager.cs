@@ -23,11 +23,9 @@ public static class PathManager
 #endif
     private static readonly object WheelWizardAppdataLock = new();
 
-    // Portable WheelWizard config only makes sense on non-Flatpak WheelWizard
-    private static readonly bool IsPortableWhWz = !IsFlatpakSandboxed() && File.Exists("portable-ww.txt");
-    private static readonly string DefaultWheelWizardAppdataPath = FileHelper.NormalizePath(
-        FileHelper.Combine(IsPortableWhWz ? string.Empty : AppDataFolder, WheelWizardFolderName)
-    );
+    // Launcher always runs in portable mode
+    public static bool IsPortableWhWz => true;
+    private static readonly string DefaultWheelWizardAppdataPath = FileHelper.NormalizePath(AppDomain.CurrentDomain.BaseDirectory);
     private static string? _wheelWizardAppdataOverride;
 
     static PathManager()
@@ -44,8 +42,7 @@ public static class PathManager
 
     private static string AppDataFolder => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     private static string LocalAppDataFolder => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-    private static string UnixAppDataOverrideFilePath =>
-        Path.Combine(IsPortableWhWz ? string.Empty : AppDataFolder, "wheelwizard-appdata-location");
+    private static string UnixAppDataOverrideFilePath => Path.Combine(DefaultWheelWizardAppdataPath, "wheelwizard-appdata-location");
 
     // Wheel wizard's appdata paths (don't have to be expressions since they don't depend on user input like the others)
     public static string WheelWizardAppdataPath
