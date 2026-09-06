@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using WheelWizard.GitHub;
@@ -928,7 +928,27 @@ public sealed class RecompInstallService : IRecompInstallService
                 return null;
 
             var json = fileSystem.File.ReadAllText(environment.InstallStateFilePath);
-            return JsonSerializer.Deserialize<RecompInstallState>(json, InstallStateJsonOptions);
+            var state = JsonSerializer.Deserialize<RecompInstallState>(json, InstallStateJsonOptions);
+            if (state is not null && environment.IsPortableInstall && !string.IsNullOrWhiteSpace(state.InstallDir))
+            {
+                // If this is a portable install and the directory was moved/transferred, update install-state.json
+                // so the backend and launcher both acknowledge the current portable location seamlessly.
+                if (!PathsMatch(state.InstallDir, environment.InstallFolderPath))
+                {
+                    state.InstallDir = environment.InstallFolderPath;
+                    try
+                    {
+                        var updatedJson = JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true });
+                        fileSystem.File.WriteAllText(environment.InstallStateFilePath, updatedJson);
+                    }
+                    catch
+                    {
+                        // non-fatal: in-memory state is already updated
+                    }
+                }
+            }
+
+            return state;
         }
         catch (Exception exception)
         {
@@ -946,14 +966,14 @@ public sealed class RecompInstallService : IRecompInstallService
     private bool IsCurrentInstallState(RecompInstallState? state) =>
         state is { SchemaVersion: CurrentInstallStateSchemaVersion }
         && RecompVersion.TryParse(state.SetupVersion, out _)
-        && PathsMatch(state.InstallDir, environment.InstallFolderPath);
+        && (PathsMatch(state.InstallDir, environment.InstallFolderPath) || environment.IsPortableInstall);
 
     private bool IsCurrentProductReport(RecompProductsEvent products, RecompInstallState state) =>
         products.ProtocolValid
         && products.Base.ProtocolValid
         && products.RetroRewind.ProtocolValid
         && VersionsMatch(products.SetupVersion, state.SetupVersion)
-        && PathsMatch(products.InstallDir, environment.InstallFolderPath);
+        && (PathsMatch(products.InstallDir, environment.InstallFolderPath) || environment.IsPortableInstall);
 
     private bool PathsMatch(string? first, string? second)
     {

@@ -30,8 +30,38 @@ public static class PathManager
 
     public static string HomeFolderPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-    // Paths set by the user
-    public static string GameFilePath => Settings.Get<string>(Settings.GAME_LOCATION);
+    // Paths set by the user (with portable fallback)
+    public static string GameFilePath
+    {
+        get
+        {
+            var configured = Settings.Get<string>(Settings.GAME_LOCATION);
+            if (!string.IsNullOrWhiteSpace(configured) && File.Exists(configured))
+                return configured;
+
+            // Check if game file is in data folder or launcher root
+            var extensions = new[] { ".iso", ".wbfs", ".rvz", ".gcm", ".gcz", ".ciso", ".wia" };
+            foreach (var dir in new[] { WheelWizardAppdataPath, LauncherFolderPath })
+            {
+                if (!Directory.Exists(dir))
+                    continue;
+
+                foreach (var ext in extensions)
+                {
+                    var match = Directory.EnumerateFiles(dir, $"*{ext}", SearchOption.TopDirectoryOnly).FirstOrDefault();
+                    if (!string.IsNullOrWhiteSpace(match))
+                        return match;
+                }
+            }
+
+            return configured;
+        }
+    }
+
+    public static string LauncherFolderPath =>
+        (!string.IsNullOrWhiteSpace(Environment.ProcessPath) ? Path.GetDirectoryName(Environment.ProcessPath) : null)
+        ?? AppDomain.CurrentDomain.BaseDirectory;
+
     public static string DolphinFilePath => Settings.Get<string>(Settings.DOLPHIN_LOCATION);
     public static string UserFolderPath => Settings.Get<string>(Settings.USER_FOLDER_PATH);
 
@@ -108,19 +138,8 @@ public static class PathManager
 
     public static string GetModDirectoryPath(string modName) => Path.Combine(ModsFolderPath, modName);
 
-    // Retro Rewind lives in Dolphin's Load folder so Riivolution can find it. Recomp-only setups
-    // have no Dolphin user folder, so the package falls back to a Wheel Wizard-owned location; both
-    // frontends read this same property, so they always share one installation.
-    public static string RiivolutionWhWzFolderPath
-    {
-        get
-        {
-            if (Settings.LOAD_PATH.IsValid() || !string.IsNullOrWhiteSpace(UserFolderPath))
-                return Path.Combine(LoadFolderPath, "Riivolution", "WheelWizard");
-
-            return Path.Combine(WheelWizardAppdataPath, "RetroRewind");
-        }
-    }
+    // Retro Rewind always lives portably inside data/RetroRewind
+    public static string RiivolutionWhWzFolderPath => Path.Combine(WheelWizardAppdataPath, "RetroRewind");
 
     public static string RetroRewind6FolderPath => Path.Combine(RiivolutionWhWzFolderPath, "RetroRewind6");
 
