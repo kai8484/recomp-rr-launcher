@@ -1,4 +1,4 @@
-﻿using Avalonia.Threading;
+using Avalonia.Threading;
 using Semver;
 using WheelWizard.Branding;
 using WheelWizard.GitHub.Domain;
@@ -33,7 +33,7 @@ public class FallbackUpdatePlatform(IBrandingSingletonService brandingService) :
                     "There is a new Wheel Wizard version available!\n"
                         + $"Version {release.TagName.TrimStart('v')} (You are currently on {installedVersion})\n"
                         + "You can manually update it by going to the github releases at: "
-                        + "https://github.com/patchzyy/WheelWizard/releases"
+                        + "https://github.com/kai8484/recomp-rr-launcher/releases"
                 )
                 .Show();
         });
