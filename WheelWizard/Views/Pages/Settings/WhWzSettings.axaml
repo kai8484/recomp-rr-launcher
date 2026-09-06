@@ -74,7 +74,7 @@
                 </StackPanel>
 
                 <Border Classes="SettingsBlockStyle SettingsRowStyle SettingsRowSingle" Margin="0,8,0,0">
-                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" MinHeight="40">
+                    <Grid ColumnDefinitions="*,Auto" MinHeight="40">
                         <StackPanel Grid.Column="0"
                                     Margin="0,0,16,0"
                                     Spacing="3"
@@ -85,18 +85,8 @@
                                        Text="{loc:T helper_text.wheel_wizard_data_folder}"
                                        TextAlignment="Left"
                                        TextWrapping="Wrap" />
-                            <SelectableTextBlock Classes="TinyText"
-                                       x:Name="AppDataLocationStatus" />
                         </StackPanel>
                         <components1:Button Grid.Column="1"
-                                                x:Name="AppDataLocationChangeButton"
-                                                Variant="Default"
-                                                ButtonSize="Compact"
-                                                Text="{loc:T action.change}"
-                                                IconData="{StaticResource Pen}"
-                                                VerticalAlignment="Center"
-                                                Click="AppDataLocationChange_OnClick" />
-                        <components1:Button Grid.Column="2"
                                                 x:Name="AppDataLocationOpenButton"
                                                 Variant="Default"
                                                 ButtonSize="Compact"
@@ -108,18 +98,6 @@
                                                 Margin="6,0,0,0"
                                                 VerticalAlignment="Center"
                                                 Click="AppDataLocationOpen_OnClick" />
-                        <components1:Button Grid.Column="3"
-                                                x:Name="AppDataLocationResetButton"
-                                                Variant="Default"
-                                                ButtonSize="Compact"
-                                                Text=""
-                                                IconData="{StaticResource Refresh}"
-                                                ToolTip.Tip="{loc:T option.reset_data_folder}"
-                                                ToolTip.Placement="Top"
-                                                ToolTip.ShowDelay="50"
-                                                Margin="6,0,0,0"
-                                                VerticalAlignment="Center"
-                                                Click="AppDataLocationReset_OnClick" />
                     </Grid>
                 </Border>
             </StackPanel>
