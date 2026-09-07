@@ -46,7 +46,7 @@ public static class RecompStatusResolver
         // Nothing stale can be launched by trusting the install that was already verified this way:
         // the pre-launch reconciliation runs the check again, under the lock, before any game starts.
         if (installationBusy && products is null)
-            return RecompVersion.TryParse(latestVersion, out _) ? WheelWizardStatus.Ready : WheelWizardStatus.NoServerButInstalled;
+            return WheelWizardStatus.Ready;
 
         // A failed or incomplete check is fail-closed. The installed host can perform a targeted repair
         // without GitHub, so an update remains actionable even offline.
@@ -54,9 +54,9 @@ public static class RecompStatusResolver
         if (products is null || products.ActionRequired || !products.Base.IsCurrent || !products.RetroRewind.IsCurrent)
             return WheelWizardStatus.OutOfDate;
 
-        // Installed but GitHub is unreachable: the checked products are still playable offline.
+        // If GitHub is unreachable (e.g. rate limit), the installed verified products are ready to play.
         if (!RecompVersion.TryParse(latestVersion, out var latest))
-            return WheelWizardStatus.NoServerButInstalled;
+            return WheelWizardStatus.Ready;
 
         if (latest.ComparePrecedenceTo(installed) > 0)
             return WheelWizardStatus.OutOfDate;

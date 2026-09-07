@@ -66,19 +66,7 @@ public class AutoUpdaterSingletonService(
         var releasesResult = await gitHubService.GetReleasesAsync();
         if (releasesResult.IsFailure)
         {
-            await Dispatcher.UIThread.InvokeAsync(async () =>
-            {
-                await new MessageBoxWindow()
-                    .SetMessageType(MessageBoxWindow.MessageType.Error)
-                    .SetTitleText("Failed to check for updates")
-                    .SetInfoText(
-                        "An error occurred while checking for updates. Please try again later. "
-                            + "\nError: "
-                            + releasesResult.Error.Message
-                    )
-                    .ShowDialog();
-            });
-
+            // Silently log and return if GitHub rate limit / network issue occurs on startup
             return null;
         }
 
