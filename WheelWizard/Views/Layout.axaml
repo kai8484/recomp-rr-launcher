@@ -1,4 +1,4 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -103,9 +103,6 @@
                                            Text="{loc:T page_title.home}"
                                            PageType="{x:Type pages:HomePage}"
                                            IsChecked="True" />
-            <patterns:SidebarRadioButton IconData="{StaticResource UserCircle}"
-                                           PageType="{x:Type pages:UserProfilePage}"
-                                           Text="{loc:T page_title.my_profiles}" x:Name="MyProfilesButton" />
             <patterns:SidebarRadioButton IconData="{StaticResource CubesStacked}"
                                            PageType="{x:Type pages:ModsPage}"
                                            Text="{loc:T page_title.patches}" x:Name="ModsButton" />
@@ -114,16 +111,6 @@
                                            Text="{loc:T page_title.my_miis}" />
             <TextBlock Text="{loc:T attribute.status_online}" Classes="SidebarSectionText" />
             <!-- Repurposing this translation from values -->
-            <patterns:SidebarRadioButton IconData="{StaticResource RoomUsers}"
-                                           PageType="{x:Type pages:RoomsPage}"
-                                           Text="{loc:T page_title.rooms}" x:Name="RoomsButton"
-                                           BoxText="0"
-                                           BoxIconData="{StaticResource UserCouple}"
-                                           BoxIconSize="14"
-                                           BoxTip="{loc:T hover.players_online.0}" />
-            <patterns:SidebarRadioButton IconData="{StaticResource Award}"
-                                           PageType="{x:Type pages:LeaderboardPage}"
-                                           Text="{loc:T page_title.leaderboard}" />
             <patterns:SidebarRadioButton IconData="{StaticResource Friends}"
                                            Text="{loc:T page_title.friends}" x:Name="FriendsButton"
                                            PageType="{x:Type pages:FriendsPage}"
@@ -139,19 +126,6 @@
                                            PageType="{x:Type pages:KitchenSinkPage}"
                                            Text="Kitchen Sink" x:Name="KitchenSinkButton" />
         </StackPanel>
-
-        <components:IconLabelButton Grid.Column="0" Grid.Row="5"
-                                    x:Name="SupportUsButton"
-                                    IconData="{StaticResource CoffeeIcon}"
-                                    Text="{loc:T action.link.support}"
-                                    Foreground="{StaticResource Neutral400}"
-                                    HoverForeground="{StaticResource Primary300}"
-                                    FontSize="13"
-                                    IconSize="20"
-                                    Click="SupportUs_OnClick"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Bottom"
-                                    Margin="15,0,0,52" />
 
         <Grid Grid.Column="0" Grid.Row="5" ColumnDefinitions="28,8,28,8,28,8,*"
               VerticalAlignment="Bottom" Margin="10,0,13,12" x:Name="SidebarBottomBar">
@@ -250,11 +224,6 @@
                         <MenuItem Header="{loc:T action.link.github}" Click="Github_Click" MinWidth="120">
                             <MenuItem.Icon>
                                 <PathIcon Data="{StaticResource GithubIcon}" Width="16" Height="16" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="{loc:T action.link.support}" Click="Support_Click" MinWidth="120">
-                            <MenuItem.Icon>
-                                <PathIcon Data="{StaticResource CoffeeIcon}" Width="16" Height="16" />
                             </MenuItem.Icon>
                         </MenuItem>
                     </ContextMenu>

@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
@@ -252,9 +252,6 @@ public partial class Layout : BaseWindow, IRepeatedTaskListener
 
     public void UpdatePlayerAndRoomCount(RRLiveRooms sender)
     {
-        var playerCount = sender.PlayerCount;
-        RoomsButton.BoxText = playerCount.ToString();
-        RoomsButton.BoxTip = t("hover.players_online.n", playerCount);
         UpdateFriendCount();
     }
 
