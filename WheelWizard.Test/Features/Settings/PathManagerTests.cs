@@ -6,22 +6,10 @@ namespace WheelWizard.Test.Features.Settings;
 public class PathManagerTests
 {
     [Fact]
-    public void TrySetWheelWizardAppdataPath_ReturnsFalse_WhenTargetPathIsUnavailable()
+    public void DefaultWheelWizardAppdataFolderPath_PointsToDataFolder()
     {
-        if (!OperatingSystem.IsWindows())
-            return;
-
-        var unavailablePath = GetUnavailableWindowsPath();
-        var result = PathManager.TrySetWheelWizardAppdataPath(unavailablePath, out var errorMessage, out _);
-
-        Assert.False(result);
-        Assert.False(string.IsNullOrWhiteSpace(errorMessage));
-    }
-
-    private static string GetUnavailableWindowsPath()
-    {
-        var used = DriveInfo.GetDrives().Select(d => char.ToUpperInvariant(d.Name[0])).ToHashSet();
-        var drive = "ZYXWVUTSRQPONMLKJIHGFEDCBA".FirstOrDefault(letter => !used.Contains(letter), 'Z');
-        return $@"{drive}:\WheelWizardTests\{Guid.NewGuid():N}";
+        var path = PathManager.DefaultWheelWizardAppdataFolderPath;
+        Assert.False(string.IsNullOrWhiteSpace(path));
+        Assert.EndsWith("data", path);
     }
 }

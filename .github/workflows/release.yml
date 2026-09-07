@@ -50,4 +50,5 @@ jobs:
         run: |
           $repo = $env:GITHUB_REPOSITORY
           $tag = $env:GITHUB_REF_NAME
-          gh release create "$tag" publish/win-x64/WheelWizard.exe --repo "$repo" --title "$tag" --generate-notes
+          Copy-Item "publish/win-x64/WheelWizard.exe" -Destination "publish/win-x64/Wheel Wizard.exe"
+          gh release create "$tag" "publish/win-x64/Wheel Wizard.exe" --repo "$repo" --title "$tag" --generate-notes
