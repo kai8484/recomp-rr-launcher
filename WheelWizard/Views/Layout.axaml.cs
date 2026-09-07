@@ -189,7 +189,7 @@ public partial class Layout : BaseWindow, IRepeatedTaskListener
 
     private void UpdateModsButtonText()
     {
-        ModsButton.Text = t("page_title.patches");
+        ModsButton.Text = t("page_title.mods");
     }
 
     //todo: after patches is more stable, uncomment this

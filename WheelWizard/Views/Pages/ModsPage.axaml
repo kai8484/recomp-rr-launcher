@@ -28,12 +28,9 @@
         <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,12"
                     Orientation="Vertical" x:Name="TopBarButtons" Spacing="3">
             <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding HasMods}">
-                <components:Button Variant="Primary" 
-                                   Text="{loc:T action.browse}" IconData="{StaticResource Search}"
-                                   Click="BrowseMod_Click" HorizontalAlignment="Center" />
-                <components:Button Variant="Default"
-                                   IconData="{StaticResource FileImport}"
-                                   Click="ImportMod_Click" HorizontalAlignment="Center" />
+                <components:Button Variant="Primary"
+                                   Text="{loc:T action.open_folder}" IconData="{StaticResource Folder}"
+                                   Click="OpenModsFolder_Click" HorizontalAlignment="Center" />
             </StackPanel>
         </StackPanel>
 
@@ -43,15 +40,11 @@
             <components:EmptyPageInfo Title="{loc:T empty_content.no_mods_title}"
                                       BodyText="{loc:T empty_content.no_mods}"
                                       HorizontalAlignment="Center" />
-            <UniformGrid Margin="0,12" Columns="2" Rows="1">
+            <StackPanel Margin="0,12" Orientation="Horizontal" HorizontalAlignment="Center">
                 <components:Button Variant="Primary" Margin="3,0"
-                                   Text="{loc:T action.browse}" IconData="{StaticResource Search}"
-                                   Click="BrowseMod_Click" HorizontalAlignment="Stretch" />
-                <components:Button Variant="Default" Margin="3,0"
-                                   Text="{loc:T action.import}"
-                                   IconData="{StaticResource FileImport}"
-                                   Click="ImportMod_Click" HorizontalAlignment="Stretch" />
-            </UniformGrid>
+                                   Text="{loc:T action.open_folder}" IconData="{StaticResource Folder}"
+                                   Click="OpenModsFolder_Click" HorizontalAlignment="Center" />
+            </StackPanel>
         </StackPanel>
 
         <Grid Grid.Row="1" x:Name="PageWithMods" RowDefinitions="*, 12*" IsVisible="{Binding HasMods}">

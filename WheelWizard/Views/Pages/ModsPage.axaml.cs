@@ -44,7 +44,7 @@ public partial class ModsPage : UserControlBase, INotifyPropertyChanged
             ))
         );
 
-    public string StoragePageTitle => t("page_title.patches");
+    public string StoragePageTitle => t("page_title.mods");
 
     private bool _hasMods;
 
@@ -123,10 +123,10 @@ public partial class ModsPage : UserControlBase, INotifyPropertyChanged
         EnableAllCheckbox.IsChecked = !ModManager.Mods.Select(mod => mod.IsEnabled).Contains(false);
     }
 
-    private void BrowseMod_Click(object sender, RoutedEventArgs e)
+    private void OpenModsFolder_Click(object? sender, RoutedEventArgs e)
     {
-        var modPopup = new ModBrowserWindow();
-        modPopup.Show();
+        Directory.CreateDirectory(PathManager.ModsFolderPath);
+        FilePickerHelper.OpenFolderInFileManager(PathManager.ModsFolderPath);
     }
 
     private async Task ReloadModsAndShowErrorsAsync()
@@ -134,38 +134,6 @@ public partial class ModsPage : UserControlBase, INotifyPropertyChanged
         var reloadResult = await ModManager.ReloadAsync();
         if (reloadResult.IsFailure)
             MessageTranslationHelper.ShowMessage(reloadResult.Error);
-    }
-
-    private async void ImportMod_Click(object sender, RoutedEventArgs e)
-    {
-        var selectedFiles = await FilePickerHelper.OpenFilePickerAsync(
-            CustomFilePickerFileType.All,
-            allowMultiple: true,
-            title: t("file_picker.select_mod_file")
-        );
-        if (selectedFiles.Count == 0)
-            return;
-
-        var modName = await new TextInputWindow()
-            .SetMainText(t("question.enter_mod_name.title"))
-            .SetPlaceholderText(t("placeholder.enter_mod_name"))
-            .SetValidation(ModManager.ValidateModName)
-            .ShowDialog();
-        if (string.IsNullOrWhiteSpace(modName))
-            return;
-
-        var importResult = await ModManager.ImportModFilesAsync(selectedFiles.ToArray(), modName);
-        if (importResult.IsFailure)
-        {
-            MessageTranslationHelper.ShowMessage(importResult.Error);
-            return;
-        }
-
-        new MessageBoxWindow()
-            .SetMessageType(MessageBoxWindow.MessageType.Message)
-            .SetTitleText(t("message_success.mod_installed.title"))
-            .SetInfoText(t("message_success.mod_installed.extra", modName)!)
-            .Show();
     }
 
     private async void RenameMod_Click(object sender, RoutedEventArgs e)

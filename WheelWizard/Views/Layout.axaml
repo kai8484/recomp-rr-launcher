@@ -105,7 +105,7 @@
                                            IsChecked="True" />
             <patterns:SidebarRadioButton IconData="{StaticResource CubesStacked}"
                                            PageType="{x:Type pages:ModsPage}"
-                                           Text="{loc:T page_title.patches}" x:Name="ModsButton" />
+                                           Text="{loc:T page_title.mods}" x:Name="ModsButton" />
             <patterns:SidebarRadioButton IconData="{StaticResource Shirt}"
                                            PageType="{x:Type pages:MiiListPage}"
                                            Text="{loc:T page_title.my_miis}" />
