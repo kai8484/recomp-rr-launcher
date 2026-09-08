@@ -38,6 +38,9 @@ public class RecompInstallState
 
     /// <summary>Whether the installed Retro Rewind product was built without a Retro-WFC payload.</summary>
     public bool IsRetroWfcPayloadSkipped => string.Equals(RetroWfcPayloadMode, "skipped", StringComparison.OrdinalIgnoreCase);
+
+    [System.Text.Json.Serialization.JsonExtensionData]
+    public Dictionary<string, System.Text.Json.JsonElement>? ExtensionData { get; set; }
 }
 
 /// <summary>

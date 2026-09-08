@@ -929,13 +929,32 @@ public sealed class RecompInstallService : IRecompInstallService
 
             var json = fileSystem.File.ReadAllText(environment.InstallStateFilePath);
             var state = JsonSerializer.Deserialize<RecompInstallState>(json, InstallStateJsonOptions);
-            if (state is not null && environment.IsPortableInstall && !string.IsNullOrWhiteSpace(state.InstallDir))
+            if (state is not null && environment.IsPortableInstall)
             {
                 // If this is a portable install and the directory was moved/transferred, update install-state.json
                 // so the backend and launcher both acknowledge the current portable location seamlessly.
+                var needsUpdate = false;
                 if (!PathsMatch(state.InstallDir, environment.InstallFolderPath))
                 {
                     state.InstallDir = environment.InstallFolderPath;
+                    needsUpdate = true;
+                }
+
+                if (state.ExtensionData is not null && state.ExtensionData.TryGetValue("RetroRewindRoot", out var retroRewindRootEl))
+                {
+                    var currentRetroRewindRoot = retroRewindRootEl.GetString();
+                    if (
+                        !string.IsNullOrWhiteSpace(currentRetroRewindRoot)
+                        && !PathsMatch(currentRetroRewindRoot, environment.RetroRewindFolderPath)
+                    )
+                    {
+                        state.ExtensionData["RetroRewindRoot"] = JsonSerializer.SerializeToElement(environment.RetroRewindFolderPath);
+                        needsUpdate = true;
+                    }
+                }
+
+                if (needsUpdate)
+                {
                     try
                     {
                         var updatedJson = JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true });
