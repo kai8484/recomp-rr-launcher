@@ -112,7 +112,20 @@ public class SettingsManager : ISettingsManager
             }
         );
 
-        GAME_LOCATION = RegisterWhWz("GameLocation", "", value => _fileSystem.File.Exists(value as string ?? string.Empty));
+        GAME_LOCATION = RegisterWhWz(
+            "GameLocation",
+            "",
+            value =>
+            {
+                var path = value as string ?? string.Empty;
+                if (_fileSystem.File.Exists(path))
+                    return true;
+
+                return string.IsNullOrWhiteSpace(path)
+                    && !string.IsNullOrWhiteSpace(PathManager.GameFilePath)
+                    && _fileSystem.File.Exists(PathManager.GameFilePath);
+            }
+        );
         FORCE_WIIMOTE = RegisterWhWz("ForceWiimote", false);
         LAUNCH_WITH_DOLPHIN = RegisterWhWz("LaunchWithDolphin", false);
         LAUNCH_RR_ON_STARTUP = RegisterWhWz("LaunchRrOnStartup", false);
